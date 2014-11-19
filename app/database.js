@@ -38,10 +38,6 @@ function Database () {
 			obj.koCount = (obj.koCount || 0) + (result.statusChar === 'E' ? 1 : 0);
 
 			if (result.error) {
-
-				if (!result.error.message) {
-					console.log(result.error);
-				}
 				var msg = result.error.class;
 				if (result.error.message) {
 					msg += ': ' + result.error.message;

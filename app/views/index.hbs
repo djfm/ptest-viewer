@@ -15,15 +15,15 @@
 						<span class="label">Count: </span>
 						<span class="value">{{count}}</span>
 					</div>
-					<div class="kpi">
+					<div class="kpi {{interval successRate 0 100}}">
 						<span class="label">Success: </span>
 						<span class="value">{{successRate}}%</span>
 					</div>
-					<div class="kpi">
+					<div class="kpi {{interval errorRate 100 0}}">
 						<span class="label">Error: </span>
 						<span class="value">{{errorRate}}%</span>
 					</div>
-					<div class="kpi">
+					<div class="kpi {{interval unknownRate 100 0}}">
 						<span class="label">Unknown: </span>
 						<span class="value">{{unknownRate}}%</span>
 					</div>

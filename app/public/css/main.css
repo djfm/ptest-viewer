@@ -40,3 +40,23 @@ section.summary {
 span.error {
 	font-size: 0.7em;
 }
+
+.kpi.interval_5 {
+	background-color: #CCFFCC;
+}
+
+.kpi.interval_4 {
+	background-color: #EEFFEE;
+}
+
+.kpi.interval_3 {
+	background-color: #FFE;
+}
+
+.kpi.interval_2 {
+	background-color: #FFEEEE;
+}
+
+.kpi.interval_1 {
+	background-color: #FFCCCC;
+}
