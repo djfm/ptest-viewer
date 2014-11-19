@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
+</head>
+<body>
+	<div class="container">
+		<h1>Summary data</h1>
+		{{#each summary}}
+			<section class="summary">
+				<h2>{{name}}</h2>
+				<div class="kpis-container">
+					<div class="kpi">
+						<span class="label">Count: </span>
+						<span class="value">{{count}}</span>
+					</div>
+					<div class="kpi">
+						<span class="label">Success: </span>
+						<span class="value">{{successRate}}%</span>
+					</div>
+					<div class="kpi">
+						<span class="label">Error: </span>
+						<span class="value">{{errorRate}}%</span>
+					</div>
+					<div class="kpi">
+						<span class="label">Unknown: </span>
+						<span class="value">{{unknownRate}}%</span>
+					</div>
+				</div>
+				<br>
+				{{#each errors}}
+					<div>
+						{{this.[1]}} errors like this:
+						<pre class="error">{{this.[0]}}</pre>
+					</div>
+				{{/each}}
+			</section>
+		{{/each}}
+	</div>
+</body>
+</html>
+
+

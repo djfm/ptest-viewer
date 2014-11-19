@@ -1,0 +1,42 @@
+body {
+	font-family: sans-serif;
+}
+
+.container {
+	max-width: 1200px;
+}
+
+h1, h2 {
+	color: #333;
+}
+
+h2 {
+	font-size: 1.1em;
+}
+
+.kpis-container {
+	display: flex;
+}
+
+.kpi {
+	border: 1px solid #999;
+	box-shadow: 2px 2px 2px 2px rgba(0,0,0, 0.1);
+	padding: 30px;
+	margin: auto;
+	background-color: #fff;
+}
+
+.kpi .label {
+	color: #999;
+}
+
+section.summary {
+	padding: 10px;
+	margin-bottom: 15px;
+	border: 1px solid #ccc;
+	background-color: #fafafa;
+}
+
+span.error {
+	font-size: 0.7em;
+}
