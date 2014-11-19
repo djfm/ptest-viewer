@@ -22,7 +22,7 @@ function Database () {
 		};
 
 		var name = function (result) {
-			return result.testName;
+			return result.testName.split('::').join('<br>::');
 		};
 
 		var summary = {};
@@ -36,6 +36,10 @@ function Database () {
 			obj.count = 1 + (obj.count || 0);
 			obj.okCount = (obj.okCount || 0) + (result.statusChar === '.' ? 1 : 0);
 			obj.koCount = (obj.koCount || 0) + (result.statusChar === 'E' ? 1 : 0);
+
+			if (result.startedAt && result.finishedAt && result.statusChar === '.') {
+				obj.totalSuccessTime = (obj.totalSuccessTime || 0) + result.finishedAt - result.startedAt;
+			}
 
 			if (result.error) {
 				var msg = result.error.class;
@@ -55,6 +59,9 @@ function Database () {
 			test.unknownRate = Math.abs((100 - test.successRate - test.errorRate)).toFixed(2);
 
 			test.errors = _.pairs(test.errors).sort(function (a, b) {return b[1] - a[1]});
+			if (test.totalSuccessTime && test.okCount) {
+				test.averageSuccessTime = Math.round(test.totalSuccessTime / test.okCount);
+			}
 		});
 		return summary;
 	};

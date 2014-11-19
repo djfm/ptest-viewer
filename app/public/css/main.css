@@ -60,3 +60,14 @@ span.error {
 .kpi.interval_1 {
 	background-color: #FFCCCC;
 }
+
+pre.error {
+	background-color: white;
+	padding: 3px;
+	margin-left: 15px;
+	white-space: pre-wrap;
+}
+
+span.errcount {
+	color: #511;
+}

@@ -9,11 +9,19 @@
 		<h1>Summary data</h1>
 		{{#each summary}}
 			<section class="summary">
-				<h2>{{name}}</h2>
+				<h2>{{{name}}}</h2>
 				<div class="kpis-container">
 					<div class="kpi">
 						<span class="label">Count: </span>
 						<span class="value">{{count}}</span>
+					</div>
+					<div class="kpi">
+						<span class="label">Avg. OK time: </span>
+						{{#if averageSuccessTime}}
+							<span class="value">{{averageSuccessTime}}s</span>
+						{{else}}
+							<span class="value">N/A</span>
+						{{/if}}
 					</div>
 					<div class="kpi {{interval successRate 0 100}}">
 						<span class="label">Success: </span>
@@ -31,7 +39,7 @@
 				<br>
 				{{#each errors}}
 					<div>
-						{{this.[1]}} errors like this:
+						<span class="errcount">{{this.[1]}} errors like this:</span>
 						<pre class="error">{{this.[0]}}</pre>
 					</div>
 				{{/each}}
