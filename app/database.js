@@ -6,13 +6,28 @@ var _  = require('underscore');
 function Database () {
 
 	var results = [];
+	var byTestToken = {};
 
-	this.add = function (data) {
+	this.add = function (token, data) {
+
+		_.each(data, function (item, position) {
+			var testToken = token + '_' + position;
+
+			item.position = position;
+			item.testToken = testToken;
+
+			byTestToken[testToken] = item;
+		});
+
 		results = results.concat(data);
 	};
 
 	this.count = function () {
-		return results.length;
+		return _.size(results);
+	};
+
+	this.getTestName = function (testToken) {
+		return byTestToken[testToken].testName;
 	};
 
 	this.summarize = function () {
@@ -22,7 +37,7 @@ function Database () {
 		};
 
 		var name = function (result) {
-			return result.testName.split('::').join('<br>::');
+			return result.testName;
 		};
 
 		var summary = {};
@@ -47,7 +62,11 @@ function Database () {
 					msg += ': ' + result.error.message;
 				}
 
-				obj.errors[msg] = (obj.errors[msg] || 0) + 1;
+				obj.errors[msg] = (obj.errors[msg] || []);
+
+				obj.errors[msg].push({
+					testToken: result.testToken
+				});
 			}
 
 			summary[k] = obj;
@@ -58,7 +77,15 @@ function Database () {
 			test.errorRate = (100 * test.koCount / test.count).toFixed(2);
 			test.unknownRate = Math.abs((100 - test.successRate - test.errorRate)).toFixed(2);
 
-			test.errors = _.pairs(test.errors).sort(function (a, b) {return b[1] - a[1]});
+			test.errors = _.map(
+				_.pairs(test.errors).sort(function (a, b) {return b[1].length - a[1].length;}),
+				function (pair) {
+					return {
+						message: pair[0],
+						errors: pair[1]
+					};
+				}
+			);
 			if (test.totalSuccessTime && test.okCount) {
 				test.averageSuccessTime = Math.round(test.totalSuccessTime / test.okCount);
 			}
@@ -85,7 +112,7 @@ function loadJsonFromFolder (path) {
 						if (err) {
 							d.reject(err);
 						} else {
-							db.add(JSON.parse(data.toString()));
+							db.add(p.basename(file, '.json'), JSON.parse(data.toString()));
 							d.resolve();
 						}
 					});
@@ -95,7 +122,6 @@ function loadJsonFromFolder (path) {
 			}, []);
 
 			q.all(promises).then(function () {
-				console.log('loaded', db.count());
 				d.resolve(db);
 			}, d.reject);
 		}

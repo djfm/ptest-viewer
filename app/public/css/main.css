@@ -1,17 +1,9 @@
-body {
-	font-family: sans-serif;
-}
-
-.container {
-	max-width: 1200px;
-}
-
-h1, h2 {
-	color: #333;
-}
-
 h2 {
-	font-size: 1.1em;
+	font-size: 1.15em;
+}
+
+body {
+	margin-top: 15px;
 }
 
 .kpis-container {
@@ -61,13 +53,51 @@ span.error {
 	background-color: #FFCCCC;
 }
 
+pre.error, div.errview {
+	margin-left: 15px;
+}
+
 pre.error {
 	background-color: white;
-	padding: 3px;
-	margin-left: 15px;
+	margin-top: 5px;
 	white-space: pre-wrap;
 }
 
 span.errcount {
 	color: #511;
+}
+
+img.screenshot {
+	max-width: 100%;
+}
+
+div.screenshots-pagination {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+div.screenshots-pagination > * {
+	flex-grow: 1;
+}
+
+div.screenshots-pagination .group a {
+	margin: 2px;
+}
+
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+}
+
+div.flex {
+	display: flex;
+	align-items: center;
+}
+
+div.flex > * {
+	margin: auto;
 }

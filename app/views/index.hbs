@@ -1,52 +1,47 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="/css/main.css">
-</head>
-<body>
-	<div class="container">
-		<h1>Summary data</h1>
-		{{#each summary}}
-			<section class="summary">
-				<h2>{{{name}}}</h2>
-				<div class="kpis-container">
-					<div class="kpi">
-						<span class="label">Count: </span>
-						<span class="value">{{count}}</span>
-					</div>
-					<div class="kpi">
-						<span class="label">Avg. OK time: </span>
-						{{#if averageSuccessTime}}
-							<span class="value">{{averageSuccessTime}}s</span>
-						{{else}}
-							<span class="value">N/A</span>
-						{{/if}}
-					</div>
-					<div class="kpi {{interval successRate 0 100}}">
-						<span class="label">Success: </span>
-						<span class="value">{{successRate}}%</span>
-					</div>
-					<div class="kpi {{interval errorRate 100 0}}">
-						<span class="label">Error: </span>
-						<span class="value">{{errorRate}}%</span>
-					</div>
-					<div class="kpi {{interval unknownRate 100 0}}">
-						<span class="label">Unknown: </span>
-						<span class="value">{{unknownRate}}%</span>
-					</div>
-				</div>
-				<br>
+<a href="/refresh" class="btn btn-primary pull-right">Refresh</a>
+
+<h1>Summary data</h1>
+{{#each summary}}
+	<section class="summary">
+		<h2>{{{name}}}</h2>
+		<div class="kpis-container">
+			<div class="kpi">
+				<span class="label">Count: </span>
+				<span class="value">{{count}}</span>
+			</div>
+			<div class="kpi">
+				<span class="label">Avg. OK time: </span>
+				{{#if averageSuccessTime}}
+					<span class="value">{{averageSuccessTime}}s</span>
+				{{else}}
+					<span class="value">N/A</span>
+				{{/if}}
+			</div>
+			<div class="kpi {{interval successRate 0 100}}">
+				<span class="label">Success: </span>
+				<span class="value">{{successRate}}%</span>
+			</div>
+			<div class="kpi {{interval errorRate 100 0}}">
+				<span class="label">Error: </span>
+				<span class="value">{{errorRate}}%</span>
+			</div>
+			<div class="kpi {{interval unknownRate 100 0}}">
+				<span class="label">Unknown: </span>
+				<span class="value">{{unknownRate}}%</span>
+			</div>
+		</div>
+		<br>
+		{{#each errors}}
+			<div>
+				<span class="errcount">{{errors.length}} error(s) like this:</span>
+				<pre class="error">{{message}}</pre>
+			</div>
+			<div class="errview">
+				Screencasts:
 				{{#each errors}}
-					<div>
-						<span class="errcount">{{this.[1]}} error(s) like this:</span>
-						<pre class="error">{{this.[0]}}</pre>
-					</div>
+					<a target="blank" href="/screencasts/{{testToken}}">{{increment @index}}</a>
 				{{/each}}
-			</section>
+			</div>
 		{{/each}}
-	</div>
-</body>
-</html>
-
-
+	</section>
+{{/each}}
