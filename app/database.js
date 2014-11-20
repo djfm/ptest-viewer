@@ -80,7 +80,7 @@ function loadJsonFromFolder (path) {
 
 				if (/\.json$/.exec(file)) {
 					var d = q.defer();
-					promises.push(d);
+					promises.push(d.promise);
 					fs.readFile(p.join(path, file), function (err, data) {
 						if (err) {
 							d.reject(err);
@@ -95,6 +95,7 @@ function loadJsonFromFolder (path) {
 			}, []);
 
 			q.all(promises).then(function () {
+				console.log('loaded', db.count());
 				d.resolve(db);
 			}, d.reject);
 		}
