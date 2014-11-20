@@ -1,0 +1,47 @@
+<h1>Screenshots</h1>
+
+<div class="flex">
+	<span class="label label-default">Test</span> {{testName}}
+</div>
+<br>
+
+{{#unless screenshots.length}}
+	Sorry, no screenshots recorded for this!
+{{/unless}}
+
+<div class="screenshots-pagination">
+	<div class="group left">
+		{{#each pagination.before}}
+			{{#if placeholder}}
+				<a class="btn btn-default" disabled>...</a>
+			{{else}}
+				{{#if enable}}
+					<a class="btn btn-primary" href="/screencasts/{{../../../testToken}}/{{position}}">{{label}}</a>
+				{{else}}
+					<a class="btn btn-primary" disabled>{{label}}</a>
+				{{/if}}
+			{{/if}}
+		{{/each}}
+	</div>
+
+
+	{{imageName}}
+
+	<div class="group right">
+		{{#each pagination.after}}
+			{{#if placeholder}}
+				<a class="btn btn-default" disabled>...</a>
+			{{else}}
+				{{#if enable}}
+					<a class="btn btn-primary" href="/screencasts/{{../../../testToken}}/{{position}}">{{label}}</a>
+				{{else}}
+					<a class="btn btn-primary" disabled>{{label}}</a>
+				{{/if}}
+			{{/if}}
+		{{/each}}
+	</div>	
+</div>
+
+{{#if imageSource}}
+	<img class="screenshot" src={{{imageSource}}}>
+{{/if}}
