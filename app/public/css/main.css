@@ -33,6 +33,10 @@ span.error {
 	font-size: 0.7em;
 }
 
+a.pull-right {
+	margin-right: 5px;
+}
+
 .kpi.interval_5 {
 	background-color: #CCFFCC;
 }

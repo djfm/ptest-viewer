@@ -1,7 +1,22 @@
-<a href="/refresh" class="btn btn-primary pull-right">Refresh</a>
+<form action="/" class="form-horizontal">
+	<button type="submit" class="btn btn-primary pull-right">Filter</button>
+	<a href="/" class="btn btn-default pull-right">Clear</a>
+	<div class="form-group">
+		<label for="startedAfter" class="control-label col-md-3">Test started after</label>
+		<div class="col-md-4">
+			<input id="startedAfter" name="filter[startedAfter]" class="form-control" type="datetime-local" value="{{filter.startedAfter}}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="startedBefore" class="control-label col-md-3">Test started before</label>
+		<div class="col-md-4">
+			<input id="startedBefore" name="filter[startedBefore]" class="form-control" type="datetime-local" value="{{filter.startedBefore}}">
+		</div>
+	</div>
+</form>
 
 <h1>Summary data</h1>
-{{#each summary}}
+{{#each summary.data}}
 	<section class="summary">
 		<h2>{{{name}}}</h2>
 		<div class="kpis-container">

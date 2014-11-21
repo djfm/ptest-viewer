@@ -1,7 +1,10 @@
+var database = require('./database'); 
 var express = require('express');
 var hbs = require('hbs');
-var database = require('./database'); 
-var screenshots = require('./screenshots'); 
+var moment = require('moment');
+var screenshots = require('./screenshots');
+var _ = require('underscore');
+var constants = require('./constants');
 
 var app = express();
 
@@ -18,23 +21,27 @@ app.use(express.static(__dirname + '/public'));
 
 var maybeDatabase;
 
-function refresh() {
+var dateFormat = constants.dateFormat;
+
+app.get('/', function (req, res) {
+
 	maybeDatabase = database.loadJsonFromFolder(statsFolder);
-}
+	
+	maybeDatabase.then(function (db) {
 
-refresh();
+		var filter = req.query.filter || {};
+		
+		var summary = db.summarize(filter);
 
-app.get('/refresh', function (req, res) {
-	refresh();
-	res.redirect('/');
-});
+		filter = _.defaults(filter, {
+			startedAfter: moment.unix(summary.firstDate).format(dateFormat),
+			startedBefore: moment.unix(summary.lastDate).format(dateFormat)
+		});
 
-app.get('/', function (req, res) {	
-	maybeDatabase
-	.then(function (db) {
 		res.render('index', {
 			testsCount: db.count(),
-			summary: db.summarize()
+			summary: summary,
+			filter: filter
 		});
 	}, function (e) {
 		res.send(e.toString());

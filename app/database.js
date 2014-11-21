@@ -1,7 +1,9 @@
-var fs = require('fs');
-var p  = require('path');
-var q  = require('q');
-var _  = require('underscore');
+var constants 	= require('./constants');
+var fs 			= require('fs');
+var moment 		= require('moment');
+var p  			= require('path');
+var q  			= require('q');
+var _  			= require('underscore');
 
 function Database () {
 
@@ -30,7 +32,21 @@ function Database () {
 		return byTestToken[testToken].testName;
 	};
 
-	this.summarize = function () {
+	this.summarize = function (filter) {
+
+		filter = _.clone(filter || {});
+
+		if (filter.startedBefore) {
+			filter.startedBefore = moment(filter.startedBefore, constants.dateFormat).unix();
+		}
+
+		if (filter.startedAfter) {
+			filter.startedAfter = moment(filter.startedAfter, constants.dateFormat).unix();
+		}
+
+		results.sort(function (a, b) {
+			return a.startedAt - b.startedAt;
+		});
 
 		var key = function (result) {
 			return result.testName;
@@ -41,10 +57,23 @@ function Database () {
 		};
 
 		var summary = {};
+		var data = {};
 
 		_.each(results, function (result) {
+
+			summary.firstDate = !summary.firstDate ? result.startedAt : Math.min(summary.firstDate, result.startedAt);
+			summary.lastDate = Math.max(summary.lastDate || 0, result.startedAt);
+
+			if (filter.startedAfter && result.startedAt < filter.startedAfter) {
+				return;
+			}
+
+			if (filter.startedBefore && result.startedAt > filter.startedBefore) {
+				return;
+			}
+
 			var k = key(result);
-			var obj = summary[k] || {errors: {}};
+			var obj = data[k] || {errors: {}};
 
 			obj.name = obj.name || name(result);
 
@@ -69,10 +98,10 @@ function Database () {
 				});
 			}
 
-			summary[k] = obj;
+			data[k] = obj;
 		});
 
-		_.each(summary, function (test) {
+		_.each(data, function (test) {
 			test.successRate = (100 * test.okCount / test.count).toFixed(2);
 			test.errorRate = (100 * test.koCount / test.count).toFixed(2);
 			test.unknownRate = Math.abs((100 - test.successRate - test.errorRate)).toFixed(2);
@@ -90,6 +119,9 @@ function Database () {
 				test.averageSuccessTime = Math.round(test.totalSuccessTime / test.okCount);
 			}
 		});
+
+		summary.data = data;
+
 		return summary;
 	};
 }
