@@ -61,8 +61,9 @@ function Database () {
 
 		_.each(results, function (result) {
 
-			summary.firstDate = !summary.firstDate ? result.startedAt : Math.min(summary.firstDate, result.startedAt);
-			summary.lastDate = Math.max(summary.lastDate || 0, result.startedAt);
+			if (!result.startedAt) {
+				return;
+			}
 
 			if (filter.startedAfter && result.startedAt < filter.startedAfter) {
 				return;
@@ -71,6 +72,18 @@ function Database () {
 			if (filter.startedBefore && result.startedAt > filter.startedBefore) {
 				return;
 			}
+
+			if (!summary.firstDate) {
+				summary.firstDate = result.startedAt;
+			} else {
+				var f = summary.firstDate;
+				summary.firstDate =  Math.min(summary.firstDate, result.startedAt);
+				if (f !== summary.firstDate) {
+					console.log(f, result.startedAt, summary.firstDate);
+				}
+			}
+
+			summary.lastDate = Math.max(summary.lastDate || 0, result.startedAt);
 
 			var k = key(result);
 			var obj = data[k] || {errors: {}};
