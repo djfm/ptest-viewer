@@ -43,5 +43,11 @@
 </div>
 
 {{#if imageSource}}
-	<img class="screenshot" src={{{imageSource}}}>
+	<div id="screenshot-container">
+		<img class="screenshot" src={{{imageSource}}}>
+	</div>
 {{/if}}
+
+<script>
+	$('#screenshot-container').zoom();
+</script>
