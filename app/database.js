@@ -1,6 +1,6 @@
 var constants 	= require('./constants');
 var fs 			= require('fs');
-var moment 		= require('moment');
+var moment 		= require('moment-timezone');
 var p  			= require('path');
 var q  			= require('q');
 var _  			= require('underscore');
@@ -37,11 +37,11 @@ function Database () {
 		filter = _.clone(filter || {});
 
 		if (filter.startedBefore) {
-			filter.startedBefore = moment(filter.startedBefore, constants.dateFormat).unix();
+			filter.startedBefore = moment(filter.startedBefore, constants.dateFormat).tz('Europe/Paris').unix();
 		}
 
 		if (filter.startedAfter) {
-			filter.startedAfter = moment(filter.startedAfter, constants.dateFormat).unix();
+			filter.startedAfter = moment(filter.startedAfter, constants.dateFormat).tz('Europe/Paris').unix();
 		}
 
 		results.sort(function (a, b) {
@@ -78,9 +78,6 @@ function Database () {
 			} else {
 				var f = summary.firstDate;
 				summary.firstDate =  Math.min(summary.firstDate, result.startedAt);
-				if (f !== summary.firstDate) {
-					console.log(f, result.startedAt, summary.firstDate);
-				}
 			}
 
 			summary.lastDate = Math.max(summary.lastDate || 0, result.startedAt);

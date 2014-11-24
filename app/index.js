@@ -1,7 +1,7 @@
 var database = require('./database'); 
 var express = require('express');
 var hbs = require('hbs');
-var moment = require('moment');
+var moment = require('moment-timezone');
 var screenshots = require('./screenshots');
 var _ = require('underscore');
 var constants = require('./constants');
@@ -30,12 +30,10 @@ app.get('/', function (req, res) {
 	maybeDatabase.then(function (db) {
 
 		var filter = req.query.filter || {};
-		
 		var summary = db.summarize(filter);
-
 		filter = _.defaults(filter, {
-			startedAfter: moment.unix(summary.firstDate).format(dateFormat),
-			startedBefore: moment.unix(summary.lastDate).format(dateFormat)
+			startedAfter: moment.utc(summary.firstDate, 'X').tz('Europe/Paris').format(dateFormat),
+			startedBefore: moment.utc(summary.lastDate, 'X').tz('Europe/Paris').format(dateFormat)
 		});
 
 		res.render('index', {
