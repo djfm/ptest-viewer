@@ -45,7 +45,8 @@ function Database () {
 		}
 
 		results.sort(function (a, b) {
-			return a.startedAt - b.startedAt;
+			var direction = filter.latest ? -1 : 1;
+			return direction * (a.startedAt - b.startedAt);
 		});
 
 		var key = function (result) {
@@ -76,19 +77,34 @@ function Database () {
 			if (!summary.firstDate) {
 				summary.firstDate = result.startedAt;
 			} else {
-				var f = summary.firstDate;
 				summary.firstDate =  Math.min(summary.firstDate, result.startedAt);
 			}
 
 			summary.lastDate = Math.max(summary.lastDate || 0, result.startedAt);
 
 			var k = key(result);
+
+			if (filter.latest && data[k]) {
+				return;
+			}
+
 			var obj = data[k] || {errors: {}};
 
 			obj.name = obj.name || name(result);
 
 			obj.count = 1 + (obj.count || 0);
-			obj.okCount = (obj.okCount || 0) + (result.statusChar === '.' ? 1 : 0);
+
+			//testToken: result.testToken
+
+			if (result.statusChar === '.') {
+				obj.okCount = (obj.okCount || 0) + 1;
+				obj.okScreenshots = obj.okScreenshots || [];
+				obj.okScreenshots.push({
+					testToken: result.testToken
+				});
+			}
+
+			
 			obj.koCount = (obj.koCount || 0) + (result.statusChar === 'E' ? 1 : 0);
 
 			if (result.startedAt && result.finishedAt && result.statusChar === '.') {
@@ -112,9 +128,9 @@ function Database () {
 		});
 
 		_.each(data, function (test) {
-			test.successRate = (100 * test.okCount / test.count).toFixed(2);
-			test.errorRate = (100 * test.koCount / test.count).toFixed(2);
-			test.unknownRate = Math.abs((100 - test.successRate - test.errorRate)).toFixed(2);
+			test.successRate = (100 * test.okCount / test.count  || 0).toFixed(2);
+			test.errorRate = (100 * test.koCount / test.count  || 0).toFixed(2);
+			test.unknownRate = Math.abs(100 - test.successRate - test.errorRate).toFixed(2);
 
 			test.errors = _.map(
 				_.pairs(test.errors).sort(function (a, b) {return b[1].length - a[1].length;}),

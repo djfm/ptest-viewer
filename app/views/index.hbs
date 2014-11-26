@@ -1,6 +1,7 @@
 <form action="/" class="form-horizontal">
 	<a href="/" class="btn btn-default pull-right">Clear</a>
 	<button type="submit" class="btn btn-primary pull-right">Filter</button>
+	<button type="submit" class="btn btn-success pull-right" name="filter[latest]" value="1">Latest</button>
 	<div class="form-group">
 		<label for="startedAfter" class="control-label col-md-3">Test started after</label>
 		<div class="col-md-4">
@@ -45,6 +46,14 @@
 				<span class="value">{{unknownRate}}%</span>
 			</div>
 		</div>
+		{{#if okScreenshots}}
+			<br>
+			OK Screencasts:
+			{{#each okScreenshots}}
+				<a target="blank" href="/screencasts/{{testToken}}">{{increment @index}}</a>
+			{{/each}}
+			<br>
+		{{/if}}
 		<br>
 		{{#each errors}}
 			<div>

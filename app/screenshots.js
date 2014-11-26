@@ -1,6 +1,7 @@
 var fs 	= require('fs');
 var p 	= require('path');
 var q 	= require('q');
+var _   = require('underscore');
 
 function formatName (name) {
 
@@ -84,14 +85,18 @@ function getScreenshots (db, baseDir, testToken, which) {
 		testName: db.getTestName(testToken)
 	};
 
-	which = which || 1;
-
-	var screenshotsDir = p.join(baseDir, 'screenshots', testToken);
+	var screenshotsDir = p.join(baseDir, testToken, 'screenshots');
 	
 	if (!fs.existsSync(screenshotsDir)) {
 		d.resolve(templateData);
 	} else {
 		fs.readdir(screenshotsDir, function (err, files) {
+
+			files = _.filter(files, function (file) {
+				return !/\.json$/.exec(file);
+			});
+
+			which = which || files.length;
 
 			if (err) {
 				d.reject(err);
@@ -112,15 +117,43 @@ function getScreenshots (db, baseDir, testToken, which) {
 				if (pos >= 0) {
 					var path = p.join(screenshotsDir, files[pos]);
 
-					templateData.imageName = formatName(p.basename(files[pos], '.png'));
+					var ext = /\.(\w+)$/.exec(files[pos])[1];
+
+					templateData.imageName = formatName(p.basename(files[pos], '.' + ext));
 					
 					fs.readFile(path, function (err, buffer) {
 						if (err) {
 							d.reject(err);
 						} else {
-							templateData.imageSource = 'data:image/png;base64,' + buffer.toString('base64');
+							templateData.imageSource = 'data:image/' + ext + ';base64,' + buffer.toString('base64');
 							templateData.pagination = paginate(pos + 1, 1, files.length);
-							d.resolve(templateData);
+
+							var metadataFile = p.join(screenshotsDir, p.basename(files[pos], '.' + ext) + '.json');
+
+							fs.readFile(metadataFile, function (err, data) {
+
+								if (!err) {
+									templateData.imageMetadata = JSON.parse(data.toString());
+
+									templateData.imageMetadata.warningsCount = 0;
+
+									_.each(templateData.imageMetadata['Browser Log'], function (entry) {
+										switch (entry.level.toLowerCase()) {
+											case 'warning':
+												entry.class = 'default';
+												++templateData.imageMetadata.warningsCount;
+												break;
+											case 'info':
+												entry.class = 'info';
+												break;
+											default:
+												entry.class = 'danger';
+										}
+									});
+								}
+
+								d.resolve(templateData);
+							});
 						}
 					});
 				} else {

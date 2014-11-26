@@ -43,11 +43,43 @@
 </div>
 
 {{#if imageSource}}
+	{{#if imageMetadata}}
+		<div class="form-horizontal">
+			<div class="form-group">
+				<label class="control-label col-md-2">URL</label>
+				<div class="form-control-static col-md-10">{{imageMetadata.[Current URL]}}</div>
+			</div>
+		</div>
+	{{/if}}
 	<div id="screenshot-container">
 		<img class="screenshot" src={{{imageSource}}}>
 	</div>
 {{/if}}
 
+<br>
+{{#each imageMetadata.[Browser Log]}}
+	<div class="row browser-log {{class}}">
+		<div class="col-md-2"><span class="label label-{{class}}">{{level}}</span></div>
+		<div class="col-md-10"><pre>{{message}}</pre></div>
+	</div>
+{{/each}}
+
+{{#if imageMetadata.warningsCount}}
+	<button id="toggleWarnings" type="button" onclick="screenshots.toggleWarnings()" class="pull-right btn btn-default">Show Warnings</button>
+	<br>
+	<br>
+{{/if}}
+
 <script>
 	$('#screenshot-container').zoom();
+
+	var screenshots = {
+		warnings: 0,
+		texts: ['Show Warnings', 'Hide Warnings'],
+		toggleWarnings: function () {
+			$('.browser-log.default').toggle();
+			this.warnings = 1 - this.warnings;
+			$('#toggleWarnings').html(this.texts[this.warnings]);
+		}
+	};
 </script>

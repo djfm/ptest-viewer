@@ -47,6 +47,11 @@ app.get('/', function (req, res) {
 });
 
 app.get('/screencasts/:testToken/:which?', function (req, res) {
+
+	if (!maybeDatabase) {
+		maybeDatabase = database.loadJsonFromFolder(statsFolder);
+	}
+
 	var testToken = req.params.testToken;
 	maybeDatabase.then(function (db) {
 		screenshots.getScreenshots(db, statsFolder, testToken, req.params.which).then(function (templateData) {

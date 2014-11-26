@@ -105,3 +105,7 @@ div.flex {
 div.flex > * {
 	margin: auto;
 }
+
+.browser-log.default {
+	display: none;
+}
