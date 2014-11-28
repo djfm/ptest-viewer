@@ -170,7 +170,15 @@ function loadJsonFromFolder (path) {
 						if (err) {
 							d.reject(err);
 						} else {
-							db.add(p.basename(file, '.json'), JSON.parse(data.toString()));
+							var json;
+							try {
+								json = JSON.parse(data.toString());
+							} catch (e) {
+
+							}
+							if (json) {
+								db.add(p.basename(file, '.json'), json);
+							}
 							d.resolve();
 						}
 					});
