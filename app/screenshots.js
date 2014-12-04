@@ -150,6 +150,11 @@ function getScreenshots (db, baseDir, testToken, which) {
 												entry.class = 'danger';
 										}
 									});
+
+									if (templateData.imageMetadata.har){
+										var b64 = new Buffer(JSON.stringify(templateData.imageMetadata.har)).toString('base64');
+										templateData.imageMetadata.har = 'data:application/json;base64,' + b64;
+									}
 								}
 
 								d.resolve(templateData);
